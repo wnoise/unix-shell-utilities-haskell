@@ -1,0 +1,114 @@
+#include "functions"
+set match-mode-cook;
+
+function defined-or-environment-or-default =
+{
+	if [defined [@1]] then
+		return [[@1]];
+	if [defined [getenv [@1]]] then
+		return [getenv [@1]];
+	return [tail [arg]];
+}
+
+function keep-lowercase =
+{
+        rv = ;
+        loop word = [arg] {
+            if [is-lowercase [word]] then
+                rv = [rv] [word];
+        }
+        return [rv] ;
+}
+
+
+function is-lowercase =
+{
+        word = [@1] ;
+        dc = [downcase [word]] ;
+	return [matches [dc] [word]];
+}
+
+function replace-haskell-source-suffix =
+{
+	local replacement = [head [arg]] ;
+	local vals = [tail [arg]] ;
+        /* set match-mode-regex ; */
+	/* local rv = [fromto \\(.*\\)\\.l\\?hs \\1[replacement] [vals]] ; */
+        rv = [fromto %.hs %[replacement] [vals]] ;
+        rv = [fromto %.lhs %[replacement] [rv]] ;
+	return [rv];
+}
+
+
+hc = [defined-or-default HC ghc] ;
+hc_opts = ;
+sources =  [glob "*.lhs" "*.hs"] ;
+objects =  [replace-haskell-source-suffix ".o" [sources]] ;
+programs = [replace-haskell-source-suffix "" [keep-lowercase [sources]]] ;
+
+[print "sources:" [sources]] ;
+[print "objects:" [objects]] ;
+[print "progs:" [programs]] ;
+
+all : [programs] ;
+
+#if [and [defined depends] [not [matches %1clean%2 [command-line-goals]]]]
+deps = [fromto % %.d [sources]] ;
+#include-cooked-nowarn [deps]
+#endif
+
+
+% : %.hs
+{
+	[hc] --make [target] [hc_opts];
+}
+
+% : %.lhs
+{
+	[hc] --make [target] [hc_opts];
+}
+
+%.o %.hi : %.lhs
+{
+	[hc] -c [source] [hc_opts] ;
+}
+
+%.o %.hi : %.hs
+{
+	[hc] -c [source] [hc_opts] ;
+}
+
+
+clobber : clean
+{
+	rm -f [programs] ;
+}
+
+clean :
+{
+        rm -f *.hi *.o *.d ;
+}
+
+#if [defined depends]
+if [matches ghc [depends]] then
+{
+	%.hs.d : %.hs
+	{
+		[hc] -M -optdep-f -optdep[target] [hc_opts] ;
+	}
+}
+else
+{
+if [matches hmake [depends]] then
+{
+	%.hs.d : %.hs
+	{
+		hmake -M %.hs > %.hs.d ;
+	}
+}
+else
+{
+	fail "Variable depends not set to suitable value :" [depends] ;
+}
+}
+#endif

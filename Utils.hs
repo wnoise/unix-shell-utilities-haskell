@@ -1,5 +1,13 @@
-module Utils (getFileContents, getFileHandles, join) where
+module Utils (
+              getFileContents,
+              getFileHandles,
+              intersperse_error,
+              join,
+              split_either
+              ) where
 import IO
+import Data.List (intersperse)
+-- import Either
 
 getFileContents :: [String] -> [IO (Either IOError String)]
 getFileContents [] = [getContents >>= return.Right]
@@ -21,5 +29,22 @@ withFile f a = try (do h <- openFile f ReadMode
                        rv <- a h
                        return rv)
 
-|-- Perl's join operator, more or less.
+-- Error strategies --
+intersperse_error handler normal = mapM_ $ either handler normal
+errors_first handler normal xs = let (errs, normals) = split_either xs in
+                                     do mapM_ handler errs
+                                        mapM_ normal normals
+{-
+abort_first handler normal xs = let split = split_either xs in
+                    case split of (err:_,_) -> handler err
+                                  (_,norms) -> mapM_ normal norms
+-}
+
+-- Perl's join operator, more or less.
 join = (concat .) . intersperse
+
+split_either xs = split_either' ([],[]) xs
+
+split_either' (ls,rs) [] = (reverse ls, reverse rs)
+split_either' (ls,rs) ((Left x):xs) = (x:ls, rs)
+split_either' (ls,rs) ((Right x):xs) = (ls, x:rs)

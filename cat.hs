@@ -16,6 +16,7 @@ import Data.Char(ord)
 import List(isPrefixOf)
 import System(getArgs)
 import System.Console.GetOpt
+import Utils
 
 main = do args <- getArgs
 	  let (flags, files, errs) = getOpt Permute opts args
@@ -23,7 +24,9 @@ main = do args <- getArgs
 	  let numberer = getNumberStyle flags
 	  let (tabs, ends, squeeze) = reifyFlags flags
 	  let filter = getFilter tabs ends squeeze numberer printer
-          getContents >>= putStr.filter
+          list <- sequence $ getFileContents files
+          let strings = map (either (\_ -> "") id) list
+          putStr $ filter $ concat strings
 
 data Flag = ShowAll | NumberNonBlank | E | ShowEnds | Number | Reversible |
             SqueezeBlank | T | U | ShowTabs | ShowNonPrinting deriving Eq

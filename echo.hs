@@ -38,7 +38,9 @@ get_flags argv = case getOpt RequireOrder options argv of
                        skip = SkipNewline `elem` opts
                     in (interpret, skip, remains, errs)
 
--- Should stick in state monad or something, for efficiency.
+-- Should stick in Writer monad or something?
+-- but it's the string argument that's sequential.
+-- don't want to stick it in lisst monoid though.
 rewrite_string :: Bool -> String -> (Bool, String)
 rewrite_string skip ('\\':'c':rest) = rewrite_string True rest
 rewrite_string skip ('\\':[])       = (skip, "\\")
@@ -57,6 +59,7 @@ string_escape x  = if isOctDigit (head x)
 			in  ([(chr (fromOctal value))], rest) 
                    else (escapetable (head x), tail x)
 
+-- Shouldn't I be able to reuse more standard library (Numeric.*) for this?
 octalValue x | isOctDigit x = digitToInt x
 octalValue err = error $ "octalValue called with " ++ [err] ++ "."
 

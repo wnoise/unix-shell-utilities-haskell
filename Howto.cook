@@ -60,22 +60,22 @@ deps = [fromto % %.d [sources]] ;
 
 % : %.hs
 {
-	[hc] --make [target] [hc_opts];
+	[hc] --make [target] -o [target] [hc_opts];
 }
 
 % : %.lhs
 {
-	[hc] --make [target] [hc_opts];
+	[hc] --make [target] -o [target] [hc_opts];
 }
 
 %.o %.hi : %.lhs
 {
-	[hc] -c [source] [hc_opts] ;
+	[hc] -c [need] [hc_opts] ;
 }
 
 %.o %.hi : %.hs
 {
-	[hc] -c [source] [hc_opts] ;
+	[hc] -c [need] [hc_opts] ;
 }
 
 

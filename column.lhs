@@ -111,8 +111,8 @@ list of columns -> list of padded columns
 >                                 (return))) contents
 >                    sequence s >>= return.concat
 
-> elimErrors :: IOError -> IO String
-> elimErrors x = writeErr (ioeGetErrorString x) >> return ""
+> elimErrors :: (IOError, FilePath) -> IO String
+> elimErrors (e,f) = writeErr (f ++ ": " ++ (ioeGetErrorString e)) >> return ""
 
 > writeErr :: String -> IO()
 > writeErr s = hPutStrLn stderr $ "column: " ++ s

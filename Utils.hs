@@ -46,5 +46,5 @@ join = (concat .) . intersperse
 split_either xs = split_either' ([],[]) xs
 
 split_either' (ls,rs) [] = (reverse ls, reverse rs)
-split_either' (ls,rs) ((Left x):xs) = (x:ls, rs)
-split_either' (ls,rs) ((Right x):xs) = (ls, x:rs)
+split_either' (ls,rs) ((Left x):xs) = split_either' (x:ls, rs) xs
+split_either' (ls,rs) ((Right x):xs) = split_either' (ls, x:rs) xs

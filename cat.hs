@@ -2,6 +2,12 @@
 -- Neet better error checking
 -- Need a better interface in Utils to handle errors?
 --
+-- orthanc% cat -n a.txt non1 b.txt non2
+--      1  a
+-- cat: non1: No such file or directory
+--      2  b
+-- cat: non2: No such file or directory
+
 -- Flags implemented as "stacked" String -> String filters
 module Main(main) where
 import Control.Monad.State

@@ -1,5 +1,5 @@
 module Main(main) where
-import System
+import System.Environment (getArgs)
 import System.Console.GetOpt
 import Data.Char (chr, isOctDigit, digitToInt) 
 -- Two common echos:

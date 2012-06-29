@@ -6,7 +6,8 @@ module Utils (
               map_either,
               split_either
               ) where
-import IO
+import Control.Exception
+import System.IO hiding (withFile)
 import Data.List (intersperse)
 -- import Either
 

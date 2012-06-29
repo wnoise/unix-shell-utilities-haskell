@@ -1,5 +1,5 @@
 module Main(main) where
-import System
+import System.Environment (getArgs)
 import System.Posix.Env
 
 main = do

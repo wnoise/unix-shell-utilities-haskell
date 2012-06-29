@@ -1,6 +1,6 @@
 module Main(main) where
-import System(getArgs)
-import List(intersperse)
+import System.Environment (getArgs)
+import Data.List (intersperse)
 
 main = do args <- getArgs
           case args of ["--help"]    -> help

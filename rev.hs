@@ -2,8 +2,8 @@
 -- but unix rev does this too.
 -- does not take list of files
 module Main(main) where
-import IO
-import System
+import System.IO
+import System.Environment (getArgs, getProgName)
 import System.IO.Error
 import Utils
 main = do args <- getArgs

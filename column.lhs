@@ -7,9 +7,10 @@ file reading broken, only stdin now
 by necessity is a sponge
 
 > module Main(main) where
-> import System
+> import System.Environment (getArgs, getEnv)
 > import System.Console.GetOpt
-> import IO
+> import System.IO
+> import System.IO.Error (ioeGetErrorString)
 > import Utils
 
 Arg parsing

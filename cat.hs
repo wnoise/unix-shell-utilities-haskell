@@ -1,4 +1,3 @@
--- Need to handle file reading, depend on Utils
 -- Neet better error checking
 -- Need a better interface in Utils to handle errors?
 --
@@ -13,8 +12,8 @@ module Main(main) where
 import Control.Monad.State
 import Data.Bits(xor)
 import Data.Char(ord)
-import List(isPrefixOf)
-import System(getArgs)
+import Data.List(isPrefixOf)
+import System.Environment (getArgs)
 import System.Console.GetOpt
 import Utils
 

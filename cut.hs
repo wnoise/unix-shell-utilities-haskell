@@ -1,6 +1,6 @@
 module Main where
 import System.Console.GetOpt
-import System(getArgs)
+import System.Environment (getArgs)
 import Data.List
 import Utils
 

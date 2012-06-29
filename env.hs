@@ -27,6 +27,7 @@ is_argument "--unset=NAME" = True
 is_argument "--help" = True
 is_argument "--version" = True
 is_argument "-" = True
+is_argument _ = False
 
 handle_arg = error "handle_arg is stub."
 
